@@ -1,0 +1,51 @@
+version: "3.7"
+
+services:
+
+  consumer:
+    container_name: consumer
+    image: servers_image
+    restart: unless-stopped
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.2
+
+  producer:
+    container_name: producer
+    image: servers_image
+    restart: unless-stopped
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.3
+
+  db:
+    container_name: mysql
+    image: servers_image
+    restart: unless-stopped
+    volumes:
+      - db_data_volume:/root
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.4
+
+  ansible:
+    container_name: ansible
+    image: ansible_image
+    command: ansible-playbook -i inventories/hosts playbook.yml
+    restart: "no"
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.5
+
+networks:
+  my_network:
+    driver: bridge
+    name: my_network
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+
+volumes:
+  db_data_volume:
+    name: db_data_volume
+    driver: local
