@@ -1,0 +1,26 @@
+---
+- name: Install Java
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop: [ 'openjdk-11-jdk', 'unzip' ]
+
+- name: Copy Producer JAR file
+  become: true
+  ansible.builtin.copy:
+    src: /app/Producer/Producer.jar
+    dest: /opt/Producer.jar
+    mode: 0644
+
+- name: Unzip jar file
+  become: true
+  ansible.builtin.unarchive:
+    src: /opt/Producer.jar
+    dest: /opt
+    remote_src: true
+
+- name: Run Producer Java application
+  become: true
+  ansible.builtin.shell: nohup java -cp /opt Main &
