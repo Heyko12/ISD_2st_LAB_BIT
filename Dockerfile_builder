@@ -1,0 +1,21 @@
+FROM openjdk:11
+
+RUN apt-get update && apt-get install -y git \
+    && rm -rf /var/lib/apt/lists/* \
+    && git clone https://github.com/Heyko12/ISD_2st_LAB_BIT.git
+
+WORKDIR /ISD_2st_LAB_BIT/Consumer
+
+RUN javac Main.java \
+    && jar cfe Consumer.jar Main Main.class MiniClass.class mysql-connector-java-8.0.30.jar \
+    && rm -rf Main.* MiniClass.* mysql*
+
+WORKDIR /ISD_2st_LAB_BIT/Producer
+
+RUN javac Main.java \
+    && jar cfe Producer.jar Main Main.class MiniClass.class \
+    && rm -rf Main.* MiniClass.*
+
+WORKDIR /ISD_2st_LAB_BIT
+
+RUN rm -rf ansible && rm -rf docker* Docker* init.sh
