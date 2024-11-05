@@ -1,0 +1,6 @@
+---
+mysql_database: mydatabase
+mysql_table: mytable
+
+mysql_user_login: user
+mysql_user_password: password
