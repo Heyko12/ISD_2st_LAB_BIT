@@ -1,3 +1,6 @@
+/* Файл нужен исключительно для того чтобы собрать воедино отправляемую структуру
+ */
+
 import java.util.Date;
 
 public class MiniClass implements java.io.Serializable {

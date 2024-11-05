@@ -18,4 +18,4 @@ RUN javac Main.java \
 
 WORKDIR /ISD_2st_LAB_BIT
 
-RUN rm -rf ansible && rm -rf docker* Docker* init.sh
+RUN rm -rf ansible && rm -rf docker* Docker* init.sh README.md

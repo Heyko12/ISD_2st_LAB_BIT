@@ -1,3 +1,6 @@
+/* Простой продьюсер, генерит случайного пользователя со своим именем и паролем, 
+ * полученный объект шлет в консьюмер
+ */
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.net.Socket;

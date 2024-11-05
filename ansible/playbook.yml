@@ -1,11 +1,11 @@
 ---
 - name: Gather Facts and Display Information
- hosts: all
- gather_facts: true
- tasks:
-   - name: Display Gathered Facts
-     debug:
-       var: ansible_facts
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Display Gathered Facts
+      debug:
+        var: ansible_facts
 
 - name: MySql setup
   hosts: name_server_db

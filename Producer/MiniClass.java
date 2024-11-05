@@ -1,3 +1,6 @@
+/* Описание файла см. в Producer/MiniClass.java
+ */
+
 import java.util.Date;
 
 public class MiniClass implements java.io.Serializable {

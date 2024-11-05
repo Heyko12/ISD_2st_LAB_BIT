@@ -1,3 +1,7 @@
+/* Простой консьюмер. Слушает порт 8097, пуляет содержимое сокета в файл, оттуда его достает
+ * и джейсонит, полученную строку отправляет в БД
+ */
+
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.InvocationTargetException;
