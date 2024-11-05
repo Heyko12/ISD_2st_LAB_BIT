@@ -1,0 +1,19 @@
+FROM alpine:3.11
+
+RUN apk add --no-cache openssh-client openssh-server ansible git sshpass \
+    && mkdir -p /root/.ssh \
+    && echo "HOST *" > /root/.ssh/config && echo " StrictHostKeyChecking no" >> /root/.ssh/config \
+    && ansible-galaxy collection install community.mysql
+
+COPY ./ansible .
+COPY ./app /app
+
+RUN echo "" > my.cnf \
+    && echo "[client]" >> my.cnf \
+    && echo "user = root" >> my.cnf \
+    && echo "password=" >> my.cnf \
+    && echo "" >> my.cnf \
+    && echo "[mysqld]" >> my.cnf \
+    && echo "bind-address = 0.0.0.0" >> my.cnf
+
+CMD [""]
