@@ -1,0 +1,27 @@
+---
+- name: Install Java
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop: [ 'openjdk-11-jdk', 'unzip' ]
+
+- name: Copy Consumer JAR file
+  become: true
+  ansible.builtin.copy:
+    src: /app/Consumer/Consumer.jar
+    dest: /opt/Consumer.jar
+    mode: 0644
+
+- name: Unzip jar file
+  become: true
+  ansible.builtin.unarchive:
+    src: /opt/Consumer.jar
+    dest: /opt
+    keep_newer: true
+    remote_src: true
+
+- name: Run Consumer Java application
+  become: true
+  ansible.builtin.shell: nohup java -cp /opt:/opt/mysql-connector-java-8.0.30.jar Main &
