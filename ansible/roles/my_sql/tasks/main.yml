@@ -1,0 +1,56 @@
+---
+- name: Install prerequisites
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+    force_apt_get: yes
+  loop: [ 'python3-apt', 'aptitude' ]
+
+- name: Install MariaDB Packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  loop: [ 'mariadb-server', 'python3-pymysql' ]
+
+- name: Start MariaDB service
+  become: true
+  ansible.builtin.service:
+    name: mysql
+    state: started
+
+- name: copy .my.cnf file with root password credentials
+  become: true
+  ansible.builtin.copy:
+    src: /my.cnf
+    dest: /etc/mysql/mariadb.conf.d/custom.cnf
+    owner: root
+    mode: 0600
+    force: no
+
+- name: Create MySql db
+  become: true
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_database }}"
+    state: present
+
+- name: Create table in MySQL database
+  become: true
+  community.mysql.mysql_query:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_db: "{{ mysql_database }}"
+    query: "CREATE TABLE IF NOT EXISTS {{ mysql_table }} (timestamp VARCHAR(255) PRIMARY KEY, jsoned_line VARCHAR(1023));"
+
+- name: Create MySQL "{{ mysql_user_login }}" user
+  become: true
+  community.mysql.mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ mysql_user_login }}"
+    host: "{{ hostvars[groups['consumer'][0]].ansible_host }}"
+    password: "{{ mysql_user_password }}"
+    priv: "{{ mysql_database }}.{{ mysql_table }}:ALL"
+  notify: Restart MySQL
